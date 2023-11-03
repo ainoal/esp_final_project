@@ -81,8 +81,20 @@ Ki=242.147503917996;
 simout=sim('control_simulation.slx');
 
 
-
+%%
 figure
 plot(simout.voltage.Time,simout.voltage.Data)
 xlabel('Time (s)')
 ylabel('Voltage (V)')
+hold on
+
+sim_results_zybo=importfile('sim_results_zybo.txt');
+time=sim_results_zybo.time;
+
+%figure
+plot(time,sim_results_zybo.y);
+
+legend('simulink','Zybo')
+xlim([0 0.05])
+
+
