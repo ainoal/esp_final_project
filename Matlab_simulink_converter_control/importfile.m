@@ -30,8 +30,8 @@ opts.DataLines = dataLines;
 opts.Delimiter = ",";
 
 % Specify column names and types
-opts.VariableNames = ["time", "u", "y", "x1", "x2", "x3", "x4", "x5", "x6"];
-opts.VariableTypes = ["double", "double", "double", "double", "double", "double", "double", "double", "double"];
+opts.VariableNames = ["time", "u", "y"];%, "x1", "x2", "x3", "x4", "x5", "x6"];
+opts.VariableTypes = ["double", "double", "double"];%, "double", "double", "double", "double", "double", "double"];
 
 % Specify file level properties
 opts.ExtraColumnsRule = "ignore";

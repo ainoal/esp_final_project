@@ -88,7 +88,7 @@ xlabel('Time (s)')
 ylabel('Voltage (V)')
 hold on
 
-sim_results_zybo=importfile('sim_results_zybo.txt');
+sim_results_zybo=importfile('sim_results_zybo_v2.txt');
 time=sim_results_zybo.time;
 
 %figure
