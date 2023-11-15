@@ -59,12 +59,13 @@ void stop_controller(){
 
 double pi_controller_update_state(double measurement) {
 	if (pi_state.run==1){
-    double error = pi_state.setpoint - measurement;
-    pi_state.integral += error*time_step;
-    double output = pi_state.kp * error + pi_state.ki * pi_state.integral;
-    return output;
+		double error = pi_state.setpoint - measurement;
+		pi_state.integral += error*time_step;
+		double output = pi_state.kp * error + pi_state.ki * pi_state.integral;
+		return output;
 	}
 	else{
+		pi_state.integral=0;
 		return 0.0;
 	}
 }

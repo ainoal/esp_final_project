@@ -95,6 +95,6 @@ time=sim_results_zybo.time;
 plot(time,sim_results_zybo.y);
 
 legend('simulink','Zybo')
-xlim([0 0.05])
+xlim([0 0.06])
 
 
