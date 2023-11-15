@@ -19,8 +19,6 @@ float Kp = 1;
 float dKi = 0.1;
 float dKp = dKi;
 
-printf("Start \n");
-
 while(1){ // Loop forever
 
 
