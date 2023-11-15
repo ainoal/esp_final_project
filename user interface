@@ -49,9 +49,7 @@ while(1){ // Loop forever
 	if (mode == 1){
 
 		if (AXI_BTN_DATA == 0b0010){  // selects configurable parameter Kp or Ki
-			printf("choose_K = %d \n",choose_K);
-			choose_K = ~choose_K;
-			printf("choose_K = %d \n",choose_K);
+			choose_K = !choose_K;
 
 			if (choose_K == 0){
 				printf("Now editing Ki \n");
