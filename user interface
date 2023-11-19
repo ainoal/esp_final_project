@@ -2,6 +2,7 @@
 #include "stdio.h"
 #include "stdbool.h"
 
+
 int main(void)
 {
 // Set direction for bits 0-3 to output for the LEDs
@@ -12,11 +13,11 @@ AXI_BTN_TRI = 0b1111;
 
 // setup the variable
 int mode = 1;
-bool choose_K = 0;
-int Ki = 1;
-int Kp = 1;
-int dKi = 0.1;
-int dKp = dKi;
+bool choose_K = false;
+float Ki = 1;
+float Kp = 1;
+float dKi = 0.1;
+float dKp = dKi;
 
 while(1){ // Loop forever
 
@@ -46,7 +47,7 @@ while(1){ // Loop forever
 	if (mode == 1){
 
 		if (AXI_BTN_DATA == 0b0010){  // selects configurable parameter Kp or Ki
-			choose_K = ~choose_K;
+			choose_K = !choose_K;
 
 			if (choose_K == 0){
 				printf("Now editing Ki \n");
@@ -61,22 +62,26 @@ while(1){ // Loop forever
 		if (AXI_BTN_DATA == 0b0100){  // Decrease value of K
 			if (choose_K == 0) {
 				Ki -= dKi;
-				printf("Now editing Ki \n");
+				printf("Ki = %g \n",Ki);
+				sleep(1);
 			}
 			if (choose_K == 1) {
 				Kp -= dKp;
-				printf("\n");
+				printf("Kp = %g \n",Kp);
+				sleep(1);
 			}
 		}
 
 		if (AXI_BTN_DATA == 0b1000){  // Increase value of K
 			if (choose_K == 0) {
 				Ki += dKi;
-				printf(" \n");
+				printf("Ki = %g \n",Ki);
+				sleep(1);
 			}
 			if (choose_K == 1) {
 				Kp += dKp;
-				printf(" \n");
+				printf("Kp = %g \n",Kp);
+				sleep(1);
 			}
 		}
 	}
