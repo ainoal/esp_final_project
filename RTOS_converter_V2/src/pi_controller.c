@@ -17,8 +17,21 @@ static struct {
     double setpoint;
     int run;
     double u;
+    double u_range[2];
     int par_to_conf; // 0:kp, 1:ki
 } pi_state;
+
+
+// PRIVATE FUNCTIONS
+static double saturate(double value) {
+    if (value < pi_state.u_range[0]) {
+        return pi_state.u_range[0];
+    } else if (value > pi_state.u_range[1]) {
+        return pi_state.u_range[1];
+    } else {
+        return value;
+    }
+}
 
 // Initialize the PI controller
 void pi_controller_init(double kp, double ki) {
@@ -29,6 +42,8 @@ void pi_controller_init(double kp, double ki) {
     pi_state.run=0;
     pi_state.u=0.0;
     pi_state.par_to_conf=0;
+    pi_state.u_range[0]=-5.0;
+    pi_state.u_range[1]=5.0;
 }
 
 // Configure the PI controller
@@ -56,8 +71,14 @@ void stop_controller(){
 double pi_controller_update_state(double measurement) {
 	if (pi_state.run==1){
 		double error = pi_state.setpoint - measurement;
-		pi_state.integral += error*time_step;
-		pi_state.u = pi_state.kp * error + pi_state.ki * pi_state.integral;
+		// ANTI WIND_UP:
+		double u_pre=pi_state.kp * error + pi_state.ki * pi_state.integral;
+		if((u_pre+error*time_step*pi_state.ki<pi_state.u_range[1] && u_pre+error*time_step*pi_state.ki>pi_state.u_range[0])|| //if integrator not saturated
+				(error < 0 && pi_state.integral >= 0) || (error >= 0 && pi_state.integral < 0)){ //always allow negative integration
+			pi_state.integral += error*time_step;
+			u_pre = u_pre+error*time_step*pi_state.ki;
+		}
+		pi_state.u=saturate(u_pre);
 	}
 	else{
 		pi_state.integral=0.0;
@@ -86,7 +107,5 @@ void change_par_value(double delta){
 		pi_state.ki+=delta;
 	}
 }
-
-// Internal functions (if necessary) should be declared static
 
 
