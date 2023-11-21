@@ -20,8 +20,8 @@
 int main(void) {
 	int state = CONFIGURATION;
 
-	AXI_LED_TRI = 0x0; 	// Set LEDs as output (0)
-	AXI_BTN_TRI = 0xF;	// Set buttons as input (1)
+	AXI_LED_TRI &= ~0x0; 	// Set LEDs as output (0)
+	AXI_BTN_TRI &= ~0xF;	// Set buttons as input (1)
 
 	XTime last_debounce_time = 0;
 	XTime current_time;

@@ -35,7 +35,9 @@ int main(void){
     	// Controller and simulation
         time=time+time_step;
         y=converter_meas();
-        start_controller();
+        if (k==0){
+        	start_controller();
+        }
         u=pi_controller_update_state(y);
         converter_state_trans(u);
 
@@ -44,9 +46,9 @@ int main(void){
         	//start_controller();
         }
 
-        //if(k==2000){
-        	//stop_controller();
-        //}
+        if(k==2000){
+        	stop_controller();
+        }
         // Data row, print only every tenth simulation sample
         if(k % 10 == 0){
         	printf("%.5f%s%.2f%s%.2f\n",
