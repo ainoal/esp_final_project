@@ -26,7 +26,7 @@ src/user_actions.o src/user_actions.o: ../src/user_actions.c \
  ../src/zynq_registers.h \
  C:\Users\z103112\workspace\esp_final_project\rtos_IRQ_bsp\ps7_cortexa9_0\include/xil_types.h \
  C:\Users\z103112\workspace\esp_final_project\rtos_IRQ_bsp\ps7_cortexa9_0\include/xuartps_hw.h \
- ../src/state_machine.h ../src/pi_controller.h
+ ../src/state_machine.h ../src/pi_controller.h ../src/pi_controller_gen.h
 
 ../src/user_actions.h:
 
@@ -87,3 +87,5 @@ C:\Users\z103112\workspace\esp_final_project\rtos_IRQ_bsp\ps7_cortexa9_0\include
 ../src/state_machine.h:
 
 ../src/pi_controller.h:
+
+../src/pi_controller_gen.h:

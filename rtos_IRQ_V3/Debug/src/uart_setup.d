@@ -27,7 +27,7 @@ src/uart_setup.o src/uart_setup.o: ../src/uart_setup.c \
  C:\Users\z103112\workspace\esp_final_project\rtos_IRQ_bsp\ps7_cortexa9_0\include/xil_types.h \
  C:\Users\z103112\workspace\esp_final_project\rtos_IRQ_bsp\ps7_cortexa9_0\include/xuartps_hw.h \
  C:\Users\z103112\workspace\esp_final_project\rtos_IRQ_bsp\ps7_cortexa9_0\include/sleep.h \
- ../src/pi_controller.h
+ ../src/pi_controller.h ../src/pi_controller_gen.h
 
 ../src/uart_setup.h:
 
@@ -86,3 +86,5 @@ C:\Users\z103112\workspace\esp_final_project\rtos_IRQ_bsp\ps7_cortexa9_0\include
 C:\Users\z103112\workspace\esp_final_project\rtos_IRQ_bsp\ps7_cortexa9_0\include/sleep.h:
 
 ../src/pi_controller.h:
+
+../src/pi_controller_gen.h:

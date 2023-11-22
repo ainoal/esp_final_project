@@ -8,9 +8,10 @@
 #include "pi_controller.h"
 #include <stdlib.h>
 
-static double time_step=0.00002;
+//static double time_step=0.00002;
 
 // PI controller state (hidden from other modules)
+/*
 static struct {
     double kp;
     double ki;
@@ -20,10 +21,13 @@ static struct {
     double u;
     double u_range[2];
     int par_to_conf; // 0:kp, 1:ki
-} pi_state;
+} pi_state;*/
+
+static pi_gen_state pi_state;
 
 
 // PRIVATE FUNCTIONS
+/*
 static double saturate(double value) {
     if (value < pi_state.u_range[0]) {
         return pi_state.u_range[0];
@@ -33,8 +37,10 @@ static double saturate(double value) {
         return value;
     }
 }
+*/
 
 // Initialize the PI controller
+
 void pi_controller_init(double kp, double ki) {
     pi_state.kp = kp;
     pi_state.ki = ki;
@@ -45,7 +51,10 @@ void pi_controller_init(double kp, double ki) {
     pi_state.par_to_conf=0;
     pi_state.u_range[0]=-5.0;
     pi_state.u_range[1]=5.0;
+    pi_state.time_step=0.00002;
 }
+
+
 
 // Configure the PI controller
 void pi_controller_update_setpoint(double setpoint) {
@@ -69,6 +78,7 @@ void stop_controller(){
 	pi_state.run=0;
 }
 
+/*
 double pi_controller_update_state(double measurement) {
 	if (pi_state.run==1){
 		double error = pi_state.setpoint - measurement;
@@ -89,6 +99,12 @@ double pi_controller_update_state(double measurement) {
 		pi_state.integral=0.0;
 		pi_state.u=0.0;
 	}
+	return pi_state.u;
+}
+*/
+
+double pi_controller_update_state(double measurement) {
+	pi_state=pi_controller_gen_update_state(pi_state, measurement);
 	return pi_state.u;
 }
 

@@ -25,14 +25,17 @@ int numeric_command=convert_identifier_numeric(command.identifier);
 
 switch(numeric_command){
 case 1:
+	//ACQUIRE SEMAPHORE
 	request_state(CONFIGURATION);//request state change to conf
 break;
 
 case 2:
+	//RELEASE SEMAPHORE
 	request_state(IDLING);//request state change to idle
 break;
 
 case 3:
+	//RELEASE SEMAPHORE
 	request_state(MODULATING);//request state change to modulation
 break;
 

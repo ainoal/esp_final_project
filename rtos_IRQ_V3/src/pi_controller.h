@@ -8,6 +8,8 @@
 #ifndef PI_CONTROLLER_H
 #define PI_CONTROLLER_H
 
+#include "pi_controller_gen.h"
+
 // Public function to initialize the PI controller
 void pi_controller_init(double kp, double ki);
 

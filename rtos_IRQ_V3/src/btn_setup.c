@@ -25,13 +25,13 @@ void SetupPushButtons()
 }
 
 void PushButtons_Intr_Handler(void *data)
+//BUTTON SEMAPHORE ACQUIRED
 {
 	buttons = XGpio_DiscreteRead(&BTNS_SWTS, BUTTONS_channel);
 	switch(buttons)
 		{
 		case 0x01:
 			AXI_LED_DATA ^= 0x01;
-			//change state
 			change_state();
 			break;
 		case 0x02:
@@ -40,21 +40,18 @@ void PushButtons_Intr_Handler(void *data)
 			break;
 		case 0x04:
 			AXI_LED_DATA ^= 0x04;
-			if (get_state()==2)
-				change_setpoint(-0.1);
-			else
-				change_par_value(-1);
-				//pi_controller_update_setpoint(10);
+			if (get_state()!=0){
+				change_setpoint(-0.1);}
+			else{
+				change_par_value(-1);}
 			break;
 		case 0x08:
 			AXI_LED_DATA ^= 0x08;
-			if (get_state()==2)
-				change_setpoint(0.1);
-			else
-				change_par_value(1);
-				//pi_controller_update_setpoint(10);
+			if (get_state()!=0){
+				change_setpoint(0.1);}
+			else{
+				change_par_value(1);}
 			break;
-			//pi_controller_update_setpoint(0);
 			break;
 		}
 	XGpio_InterruptClear(&BTNS_SWTS,0xF);

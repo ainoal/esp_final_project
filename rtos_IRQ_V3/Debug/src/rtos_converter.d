@@ -28,7 +28,8 @@ src/rtos_converter.o src/rtos_converter.o: ../src/rtos_converter.c \
  C:\Users\z103112\workspace\esp_final_project\rtos_IRQ_bsp\ps7_cortexa9_0\include/xttcps_hw.h \
  C:\Users\z103112\workspace\esp_final_project\rtos_IRQ_bsp\ps7_cortexa9_0\include/xuartps_hw.h \
  ../src/uart_setup.h ../src/btn_setup.h ../src/pi_controller.h \
- ../src/state_machine.h ../src/converter_model.h
+ ../src/pi_controller_gen.h ../src/state_machine.h \
+ ../src/converter_model.h ../src/user_actions.h
 
 C:\Users\z103112\workspace\esp_final_project\rtos_IRQ_bsp\ps7_cortexa9_0\include/xscugic.h:
 
@@ -94,6 +95,10 @@ C:\Users\z103112\workspace\esp_final_project\rtos_IRQ_bsp\ps7_cortexa9_0\include
 
 ../src/pi_controller.h:
 
+../src/pi_controller_gen.h:
+
 ../src/state_machine.h:
 
 ../src/converter_model.h:
+
+../src/user_actions.h:

@@ -10,6 +10,7 @@ C_SRCS += \
 ../src/btn_setup.c \
 ../src/converter_model.c \
 ../src/pi_controller.c \
+../src/pi_controller_gen.c \
 ../src/rtos_converter.c \
 ../src/state_machine.c \
 ../src/timer_setup.c \
@@ -20,6 +21,7 @@ OBJS += \
 ./src/btn_setup.o \
 ./src/converter_model.o \
 ./src/pi_controller.o \
+./src/pi_controller_gen.o \
 ./src/rtos_converter.o \
 ./src/state_machine.o \
 ./src/timer_setup.o \
@@ -30,6 +32,7 @@ C_DEPS += \
 ./src/btn_setup.d \
 ./src/converter_model.d \
 ./src/pi_controller.d \
+./src/pi_controller_gen.d \
 ./src/rtos_converter.d \
 ./src/state_machine.d \
 ./src/timer_setup.d \

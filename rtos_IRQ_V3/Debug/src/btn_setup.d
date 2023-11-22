@@ -19,7 +19,7 @@ src/btn_setup.o src/btn_setup.o: ../src/btn_setup.c \
  C:\Users\z103112\workspace\esp_final_project\rtos_IRQ_bsp\ps7_cortexa9_0\include/xil_exception.h \
  ../src/zynq_registers.h \
  C:\Users\z103112\workspace\esp_final_project\rtos_IRQ_bsp\ps7_cortexa9_0\include/xil_types.h \
- ../src/pi_controller.h ../src/state_machine.h
+ ../src/pi_controller.h ../src/pi_controller_gen.h ../src/state_machine.h
 
 C:\Users\z103112\workspace\esp_final_project\rtos_IRQ_bsp\ps7_cortexa9_0\include/xparameters.h:
 
@@ -62,5 +62,7 @@ C:\Users\z103112\workspace\esp_final_project\rtos_IRQ_bsp\ps7_cortexa9_0\include
 C:\Users\z103112\workspace\esp_final_project\rtos_IRQ_bsp\ps7_cortexa9_0\include/xil_types.h:
 
 ../src/pi_controller.h:
+
+../src/pi_controller_gen.h:
 
 ../src/state_machine.h:

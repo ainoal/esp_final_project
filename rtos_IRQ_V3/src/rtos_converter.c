@@ -8,6 +8,7 @@
 #include "btn_setup.h"
 #include "pi_controller.h"
 #include "converter_model.h"
+#include "user_actions.h"
 #include <stdio.h>
 
 extern XScuGic xInterruptController;
@@ -26,7 +27,7 @@ int main(void)
 	SetupUART();
 	//SetupUARTInterrupt();
 	SetupTimer();
-	SetupTicker();
+	//SetupTicker();
 	SetupPushButtons();
 
 	double Kp_init=0.0024;
@@ -71,6 +72,7 @@ void simulate_and_control() {
 	for( ;; ) {
 		AXI_LED_DATA ^= 0x01;
 		meas=converter_meas();
+		//change_duty_cycle(meas);
 		//set_PWM_duty_cycle(meas.y);  TO BE IMPLEMENTED
 		u=pi_controller_update_state(meas.y);
 		converter_state_trans(u);
@@ -104,7 +106,8 @@ void read_UART(){
 	//
 	const TickType_t freq = pdMS_TO_TICKS( 100 ); // in ms
 	TickType_t wakeTime = xTaskGetTickCount();  // only once initialized
-	const char *message[20];
+	//const char *message[20];
+	const char* message;
 	ParsedData user_data;
 	for( ;; ) {
 	//char* test=uart_receive();
@@ -112,10 +115,10 @@ void read_UART(){
 	//	printf("%c\n",test);
 	//	test=uart_receive();
 	//}
-	*message=receive_message();
-	if (*message){
-		printf("%s\n",*message);
-		user_data=command_parser(*message);
+	message=receive_message();
+	if (message){
+		printf("%s\n",message);
+		user_data=command_parser(message);
 		//printf("%s\n",user_data.identifier);
 		//printf("%.2f\n",user_data.value);
 
@@ -124,7 +127,7 @@ void read_UART(){
 
 
 		///////////////////////////////////////////////////////////////////
-		if(strcmp(user_data.identifier,"uref")==0){
+		/*if(strcmp(user_data.identifier,"uref")==0){
 			pi_controller_update_setpoint(user_data.value);
 			//AXI_LED_DATA ^= 0x4;
 		}
@@ -135,11 +138,9 @@ void read_UART(){
 			else if(user_data.value==0){
 				stop_controller();
 			}
-		}
+		}*/
 		/////////////////////////////////////////////////////////////////////
 	}
-
-
 	vTaskDelayUntil( &wakeTime, freq );
 	}
 }
