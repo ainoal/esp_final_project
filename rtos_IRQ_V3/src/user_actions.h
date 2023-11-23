@@ -9,7 +9,10 @@
 #define SRC_USER_ACTIONS_H
 
 #include "uart_setup.h"
+#include "semphr.h"
 
+void init_uart_semaphore(void);
 void take_user_actions(ParsedData user_command);
+extern SemaphoreHandle_t uart_semaphore;
 
 #endif /* SRC_USER_ACTIONS_H */

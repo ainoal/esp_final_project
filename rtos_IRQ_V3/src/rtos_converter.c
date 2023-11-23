@@ -29,6 +29,7 @@ int main(void)
 	SetupTimer();
 	//SetupTicker();
 	SetupPushButtons();
+	init_uart_semaphore();
 
 	double Kp_init=0.0024;
 	double Ki_init=242.1475;
