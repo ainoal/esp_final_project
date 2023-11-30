@@ -31,6 +31,7 @@ int main(void)
 	//SetupTicker();
 	//SetupPushButtons();
 	init_uart_semaphore();
+	init_button_semaphore();
 
 	double Kp_init=0.0024;
 	double Ki_init=242.1475;
