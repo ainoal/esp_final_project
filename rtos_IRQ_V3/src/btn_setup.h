@@ -13,7 +13,7 @@
 extern XScuGic xInterruptController;	// Interrupt controller instance
 
 void SetupPushButtons();
-void PushButtons_Intr_Handler();
+void PushButtons_Handler();
 int checkUARTSemaphoreStatus(void);
 
 

@@ -1,2 +1,2 @@
    text	   data	    bss	    dec	    hex	filename
- 108436	   3800	  89632	 201868	  3148c	rtos_IRQ_V3.elf
+ 105948	   3720	  89632	 199300	  30a84	rtos_IRQ_V3.elf

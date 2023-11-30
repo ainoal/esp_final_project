@@ -7,7 +7,7 @@
 XGpio BTNS_SWTS;
 u8 buttons = 0;
 
-void SetupPushButtons()
+/*void SetupPushButtons()
 {
 	XGpio_Initialize(&BTNS_SWTS, BUTTONS_AXI_ID);
 	XGpio_InterruptEnable(&BTNS_SWTS, 0xF);
@@ -19,19 +19,20 @@ void SetupPushButtons()
 	Xil_ExceptionRegisterHandler(XIL_EXCEPTION_ID_IRQ_INT, (Xil_ExceptionHandler) XScuGic_InterruptHandler, &xInterruptController);
 
 	/* Defines the PushButtons_Intr_Handler as the FIQ interrupt handler.*/
-	Xil_ExceptionRegisterHandler(XIL_EXCEPTION_ID_FIQ_INT,
+	/*Xil_ExceptionRegisterHandler(XIL_EXCEPTION_ID_FIQ_INT,
 								 (Xil_ExceptionHandler) PushButtons_Intr_Handler,
 								 &xInterruptController);
 	Xil_ExceptionEnableMask(XIL_EXCEPTION_FIQ);
-}
+}*/
 
-void PushButtons_Intr_Handler(void *data)
+void PushButtons_Handler(void *data)
 //BUTTON SEMAPHORE ACQUIRED
 {
 	int isUARTSemaphoreTaken = checkUARTSemaphoreStatus();
 	if (isUARTSemaphoreTaken == 0) {
 		/* Buttons have an effect only if the semaphore is free */
-		buttons = XGpio_DiscreteRead(&BTNS_SWTS, BUTTONS_channel);
+		buttons = AXI_BTN_DATA;
+		//printf("Push buttons\n");
 		switch(buttons)
 			{
 			case 0x01:
@@ -63,7 +64,7 @@ void PushButtons_Intr_Handler(void *data)
 		printf("UART is in conf state\n");
 	}
 
-	XGpio_InterruptClear(&BTNS_SWTS,0xF);
+	//XGpio_InterruptClear(&BTNS_SWTS,0xF);
 }
 
 int checkUARTSemaphoreStatus(void) {

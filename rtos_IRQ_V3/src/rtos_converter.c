@@ -17,6 +17,7 @@ void simulate_and_control();
 void output_to_user();
 void read_UART();
 void SetupInterrupts();
+void buttons_task();
 
 int main(void)
 {
@@ -28,7 +29,7 @@ int main(void)
 	//SetupUARTInterrupt();
 	SetupTimer();
 	//SetupTicker();
-	SetupPushButtons();
+	//SetupPushButtons();
 	init_uart_semaphore();
 
 	double Kp_init=0.0024;
@@ -40,6 +41,7 @@ int main(void)
 	xTaskCreate(simulate_and_control, "simulate_and_control", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY+3, NULL);
 	xTaskCreate(output_to_user, "output_to_user", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY+1, NULL);
 	xTaskCreate(read_UART,"read_UART",configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY+2, NULL);
+	xTaskCreate(buttons_task, "buttons_task", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY+4, NULL);
 
 	vTaskStartScheduler();
 
@@ -62,6 +64,18 @@ void SetupInterrupts()
 
 	/* Install a default handler for each GIC interrupt. */
 	XScuGic_CfgInitialize( &xInterruptController, pxGICConfig, pxGICConfig->CpuBaseAddress );
+}
+
+void buttons_task() {
+	const TickType_t freq = pdMS_TO_TICKS( 20 ); // in ms
+	TickType_t wakeTime = xTaskGetTickCount();  // only once initialized
+
+	for( ;; ) {
+		AXI_LED_DATA ^= 0b1000;
+		PushButtons_Handler();
+		vTaskDelayUntil( &wakeTime, freq );
+	}
+
 }
 
 void simulate_and_control() {
