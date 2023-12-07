@@ -20,7 +20,7 @@ static double time_step=0.00002;
 static double x_new[N] = {0}; // Temporary state vector
 
 
-static double A[N][N] = {
+static double A[N][N] = { //State transition matrix
 		{0.9652, -0.0172, 0.0057, -0.0058, 0.0052, -0.0251},
 		{0.7732, 0.1252, 0.2315, 0.0700, 0.1282, 0.7754},
 		{0.8278, -0.7522, -0.0956, 0.3299, -0.4855, 0.3915},
@@ -29,7 +29,7 @@ static double A[N][N] = {
 		{1.1056, 0.7587, -0.1179, 0.0748, -0.2192, 0.1491}
 	};
 
-static double B[N][M] = {
+static double B[N][M] = { //Control matrix (discrete time)
 	{0.0471},
 	{0.0377},
 	{0.0404},
@@ -41,7 +41,7 @@ static double B[N][M] = {
 //static double C[P][N] = {{0, 0, 0, 0, 0, 1}};
 
 // PRIVATE FUNCTIONS
-static void state_trans(double u) {
+static void state_trans(double u) { //compute A*x
     for (int i = 0; i < N; ++i) {
     	x_new[i]=0;
     	for (int j = 0; j < N; ++j) {
@@ -54,7 +54,7 @@ static void state_trans(double u) {
 
 }
 
-static void control_system(double u) {
+static void control_system(double u) { //compute the effect of the control (B*u)
 	for (int i = 0; i < N; ++i) {
 		x[i] += B[i][0] * u;
 	}
@@ -71,13 +71,12 @@ void converter_init(double x1, double x2, double x3, double x4, double x5, doubl
 }
 
 void converter_state_trans(double u){
-    // Calculate A*x
-    state_trans(u);
-    control_system(u);
-    time+=time_step;
+    state_trans(u); // Compute x=A*x
+    control_system(u); //Compute x+=B*u
+    time+=time_step; //increment time
 }
 
-struct time_stamp_meas converter_meas(){
+struct time_stamp_meas converter_meas(){ //return struct with fields: y=x[5] and time
 	struct time_stamp_meas m;
 	m.time=time;
 	m.y=x[5];

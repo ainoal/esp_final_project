@@ -26,10 +26,9 @@ pi_gen_state pi_controller_gen_update_state(pi_gen_state PI_s,  double measureme
 		// ANTI WIND_UP:
 		double u_pre=PI_s.kp * error + PI_s.ki * PI_s.integral;
 		if((u_pre+error*PI_s.time_step*PI_s.ki<PI_s.u_range[1] && u_pre+error*PI_s.time_step*PI_s.ki>PI_s.u_range[0])|| //if integrator not saturated
-				//(error < 0 && pi_state.integral >= 0) || (error >= 0 && pi_state.integral < 0))
 				(abs(PI_s.integral)>abs(PI_s.integral+error*PI_s.time_step))){ //always allow "negative" integration
 			PI_s.integral += error*PI_s.time_step;
-			u_pre = u_pre+error*PI_s.time_step*PI_s.ki;
+			u_pre = u_pre+error*PI_s.time_step*PI_s.ki; //computed control before checking the saturation
 		}
 		else{
 			//

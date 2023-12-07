@@ -113,14 +113,14 @@ double pi_controller_get_state(){
 }
 
 void change_par_to_conf(){
-	pi_state.par_to_conf=(pi_state.par_to_conf + 1) % 2;
+	pi_state.par_to_conf=(pi_state.par_to_conf + 1) % 2; //this parameter indicates if the buttons (+/-) change kp or ki values
 }
 
-void change_setpoint(double delta){
+void change_setpoint(double delta){ //this function changes value of uref
 	pi_state.setpoint+=delta;
 }
 
-void change_par_value(double delta){
+void change_par_value(double delta){ //this function changes value of kp or ki depending on the state of par_to_conf
 	switch(pi_state.par_to_conf){
 	case 0:
 		pi_state.kp+=delta;

@@ -41,7 +41,7 @@ void SetupUART(){
  }
 
 // Check if UART receive FIFO is not empty and return the new data
-char uart_receive() {
+char uart_receive() { //receive a single character from UART
 	 if ((UART_STATUS & XUARTPS_SR_RXEMPTY) == XUARTPS_SR_RXEMPTY) return 0;
 	 return UART_FIFO;
 }
@@ -67,13 +67,11 @@ ParsedData command_parser(const char* uart_message){
     return result;
 }
 
-const char* receive_message(){
+const char* receive_message(){ //receive a string of characters
 		int index_str=0;
 		char input = uart_receive();
-		// If an UART message was received.
+		// If an UART message was received
 		while(input){
-			// Depending on the serial terminal used, UART messages can be terminated
-			// by either carriage return '\r' or line feed '\n'.
 			if (input == '\r' || input == '\n' || index_str==BUFFER_SIZE){
 				rx_buf[index_str] = '\0';
 				uart_receive();
@@ -85,6 +83,5 @@ const char* receive_message(){
 			}
 			input=uart_receive();
 		}
-		//return '\0';
 		return 0;
 }
