@@ -11,26 +11,26 @@
 #define MODULATING 2
 
 //PRIVATE VARIABLES
-static int state=CONFIGURATION; //state is initialized to be in configuration
+static int state=0;
 
 // PUBLIC FUNCTIONS
 void request_state(int new_state){
 	switch(new_state){
 	case CONFIGURATION:
-		stop_controller(); //first stop the controller
-		state=CONFIGURATION; //then change state to configuration (this ensures no inverter parameter changes can occur when the converter is on)
+		stop_controller();
+		state=CONFIGURATION;
 		//set LEDS ON?
 	break;
 
 	case IDLING:
 		stop_controller();
-		state=IDLING; // no modulation, but configuring inverter parameters not allowed
+		state=IDLING;
 		//set LEDS OFF?
 	break;
 
 	case MODULATING:
-		state=MODULATING; //first change the state (effectively prevent change of kp and ki)
-		start_controller(); //then actually start the modulation
+		state=MODULATING;
+		start_controller();
 	break;
 	}
 }
@@ -40,6 +40,6 @@ int get_state(){
 }
 
 void change_state(){
-	int new_state = (state + 1) % 3; //change state: conf->idle->mod->conf...
+	int new_state = (state + 1) % 3;
 	request_state(new_state);
 }

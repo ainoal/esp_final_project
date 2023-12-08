@@ -1,0 +1,28 @@
+11:33:26 **** Auto Build of configuration Debug for project rtos_IRQ_V3 ****
+make pre-build main-build 
+a9-linaro-pre-build-step
+' '
+'Building file: ../src/pi_controller.c'
+'Invoking: ARM v7 gcc compiler'
+arm-none-eabi-gcc -Wall -O0 -g3 -c -fmessage-length=0 -MT"src/pi_controller.o" -mcpu=cortex-a9 -mfpu=vfpv3 -mfloat-abi=hard -I"C:\Users\ainol\workspaces\final_work\rtos_IRQ_bsp\ps7_cortexa9_0\include" -MMD -MP -MF"src/pi_controller.d" -MT"src/pi_controller.o" -o "src/pi_controller.o" "../src/pi_controller.c"
+'Finished building: ../src/pi_controller.c'
+' '
+'Building file: ../src/state_machine.c'
+'Invoking: ARM v7 gcc compiler'
+arm-none-eabi-gcc -Wall -O0 -g3 -c -fmessage-length=0 -MT"src/state_machine.o" -mcpu=cortex-a9 -mfpu=vfpv3 -mfloat-abi=hard -I"C:\Users\ainol\workspaces\final_work\rtos_IRQ_bsp\ps7_cortexa9_0\include" -MMD -MP -MF"src/state_machine.d" -MT"src/state_machine.o" -o "src/state_machine.o" "../src/state_machine.c"
+'Finished building: ../src/state_machine.c'
+' '
+'Building target: rtos_IRQ_V3.elf'
+'Invoking: ARM v7 gcc linker'
+arm-none-eabi-gcc -mcpu=cortex-a9 -mfpu=vfpv3 -mfloat-abi=hard -Wl,-build-id=none -specs=Xilinx.spec -Wl,-T -Wl,../src/lscript.ld -L../../rtos_IRQ_bsp/ps7_cortexa9_0/lib -o "rtos_IRQ_V3.elf"  ./src/LED_PWM.o ./src/btn_setup.o ./src/converter_model.o ./src/pi_controller.o ./src/pi_controller_gen.o ./src/rtos_converter.o ./src/state_machine.o ./src/timer_setup.o ./src/uart_setup.o ./src/user_actions.o   -Wl,--start-group,-lxil,-lfreertos,-lgcc,-lc,--end-group
+'Finished building target: rtos_IRQ_V3.elf'
+' '
+'Invoking: ARM v7 Print Size'
+arm-none-eabi-size rtos_IRQ_V3.elf  |tee "rtos_IRQ_V3.elf.size"
+   text	   data	    bss	    dec	    hex	filename
+ 108884	   3800	  89632	 202316	  3164c	rtos_IRQ_V3.elf
+'Finished building: rtos_IRQ_V3.elf.size'
+' '
+
+11:33:28 Build Finished (took 2s.670ms)
+

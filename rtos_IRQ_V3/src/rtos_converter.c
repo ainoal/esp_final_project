@@ -14,38 +14,39 @@
 
 extern XScuGic xInterruptController;
 
-//Definition of function prototypes
 void simulate_and_control();
 void output_to_user();
 void read_UART();
 void SetupInterrupts();
+void buttons_task();
 
 int main(void)
 {
 	AXI_LED_TRI &= ~(0b1111UL);
 	AXI_BTN_TRI |= 0xF;
 
-	SetupInterrupts(); //Ensure there are no interrupts when initializing
-	SetupUART();	//Setup UART
+	SetupInterrupts();
+	SetupUART();
 	//SetupUARTInterrupt();
-	//SetupTimer();
+	SetupTimer();
 	//SetupTicker();
+	//SetupPushButtons();
 	initialize_PWM();
-	SetupPushButtons();  //Setup button interrupts
 	init_uart_semaphore();
+	init_button_semaphore();
 
-	//Initialize converter with nicely working parameters
 	double Kp_init=0.0024;
 	double Ki_init=242.1475;
 	converter_init(0.0,0.0,0.0,0.0,0.0,0.0);
 	pi_controller_init(Kp_init,Ki_init);
 
-	//Define tasks for the scheduler
+
 	xTaskCreate(simulate_and_control, "simulate_and_control", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY+3, NULL);
 	xTaskCreate(output_to_user, "output_to_user", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY+1, NULL);
 	xTaskCreate(read_UART,"read_UART",configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY+2, NULL);
+	xTaskCreate(buttons_task, "buttons_task", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY+4, NULL);
 
-	vTaskStartScheduler();	//start scheduling
+	vTaskStartScheduler();
 
 	/* As normal, the following line should never be reached. */
 	for (;;);
@@ -68,10 +69,22 @@ void SetupInterrupts()
 	XScuGic_CfgInitialize( &xInterruptController, pxGICConfig, pxGICConfig->CpuBaseAddress );
 }
 
-void simulate_and_control() { //This function computes the new control, u, and runs the converter one time step further
+void buttons_task() {
+	const TickType_t freq = pdMS_TO_TICKS( 20 ); // in ms
+	TickType_t wakeTime = xTaskGetTickCount();  // only once initialized
+
+	for( ;; ) {
+		AXI_LED_DATA ^= 0b1000;
+		PushButtons_Handler();
+		vTaskDelayUntil( &wakeTime, freq );
+	}
+
+}
+
+void simulate_and_control() {
 	const TickType_t freq = pdMS_TO_TICKS( 20 ); // in ms
 	double u;
-	struct time_stamp_meas meas; //time labeled measurement data y
+	struct time_stamp_meas meas;
 	TickType_t wakeTime = xTaskGetTickCount();  // only once initialized
 
 	for( ;; ) {
@@ -96,10 +109,10 @@ void output_to_user() {
 
 	for( ;; ) {
 		AXI_LED_DATA ^= 0x02;
-		meas=converter_meas(); //this function is reentrant
-		u=pi_controller_get_state(); //this function is reentrant
+		meas=converter_meas();
+		u=pi_controller_get_state();
 		printf("%.5f%s%.2f%s%.2f\n",
-			meas.time, del, u, del, meas.y); //del is a predefined delimiter for the data
+			meas.time, del, u, del, meas.y);
 		// https://www.freertos.org/vtaskdelayuntil.html
 		vTaskDelayUntil( &wakeTime, freq );
 
@@ -113,22 +126,22 @@ void read_UART(){
 	const TickType_t freq = pdMS_TO_TICKS( 100 ); // in ms
 	TickType_t wakeTime = xTaskGetTickCount();  // only once initialized
 	//const char *message[20];
-	const char* message; //initialize pointer to the message string
-	ParsedData user_data;	//initialize struct containing the message data
+	const char* message;
+	ParsedData user_data;
 	for( ;; ) {
 	//char* test=uart_receive();
 	//while(test){
 	//	printf("%c\n",test);
 	//	test=uart_receive();
 	//}
-	message=receive_message();	//poll UART
-	if (message){ //if message is not empty
-		printf("%s\n",message); //repeat the message of the user
-		user_data=command_parser(message);	//convert the message (string) to a struct containing command (and possibly value)
+	message=receive_message();
+	if (message){
+		printf("%s\n",message);
+		user_data=command_parser(message);
 		//printf("%s\n",user_data.identifier);
 		//printf("%.2f\n",user_data.value);
 
-		take_user_actions(user_data); //based on the user UART input, TRY to take the corresponding actions (if allowed in current state)
+		take_user_actions(user_data); //TO BE IMPLEMENTED
 
 
 

@@ -1,0 +1,108 @@
+#include <zynq_registers.h> // Defines hardware registers
+#include "stdio.h"
+#include "stdbool.h"
+
+
+int main(void)
+{
+// Set direction for bits 0-3 to output for the LEDs
+AXI_LED_TRI = 0b0000;
+
+// Set direction for bits 0-3 to input for the buttons
+AXI_BTN_TRI = 0b1111;
+
+// setup the variable
+int mode = 1;
+bool choose_K = false;
+float Ki = 1;
+float Kp = 1;
+float dKi = 0.1;
+float dKp = dKi;
+
+while(1){ // Loop forever
+
+
+	if (AXI_BTN_DATA == 0b0001){  // Change mode
+		mode ++;
+		if (mode == 4) mode = 1;
+
+		if (mode == 1) {
+			AXI_LED_DATA = 0b0001;
+			printf("Mode : configuration \n");
+			sleep(1);
+		}
+		else if (mode == 2) {
+			AXI_LED_DATA = 0b0010;
+			printf("Mode : idling \n");
+			sleep(1);
+		}
+		else if (mode == 3) {
+			AXI_LED_DATA = 0b0100;
+			printf("Mode : modulating \n");
+			sleep(1);
+		}
+	}
+
+	// In configuration mode :
+	if (mode == 1){
+
+		if (AXI_BTN_DATA == 0b0010){  // selects configurable parameter Kp or Ki
+			choose_K = !choose_K;
+
+			if (choose_K == 0){
+				printf("Now editing Ki \n");
+				sleep(1);
+			}
+			if (choose_K == 1) {
+				printf("Now editing Kp \n");
+				sleep(1);
+			}
+		}
+
+		if (AXI_BTN_DATA == 0b0100){  // Decrease value of K
+			if (choose_K == 0) {
+				Ki -= dKi;
+				printf("Ki = %g \n",Ki);
+				sleep(1);
+			}
+			if (choose_K == 1) {
+				Kp -= dKp;
+				printf("Kp = %g \n",Kp);
+				sleep(1);
+			}
+		}
+
+		if (AXI_BTN_DATA == 0b1000){  // Increase value of K
+			if (choose_K == 0) {
+				Ki += dKi;
+				printf("Ki = %g \n",Ki);
+				sleep(1);
+			}
+			if (choose_K == 1) {
+				Kp += dKp;
+				printf("Kp = %g \n",Kp);
+				sleep(1);
+			}
+		}
+	}
+
+	// Idling mode
+	if (mode == 2){
+		//...
+	}
+
+	// Modulation mode
+	if (mode == 3){
+
+		if (AXI_BTN_DATA == 0b0100){  // Decrease reference output voltage
+			//...
+		}
+
+		if (AXI_BTN_DATA == 0b1000){  // Increase reference output voltage
+			//...
+		}
+
+	}
+}
+
+}
