@@ -33,9 +33,7 @@ src/btn_setup.o src/btn_setup.o: ../src/btn_setup.c \
  C:\Users\ainol\workspaces\final_work\rtos_IRQ_bsp\ps7_cortexa9_0\include/xuartps_hw.h \
  C:\Users\ainol\workspaces\final_work\rtos_IRQ_bsp\ps7_cortexa9_0\include/semphr.h \
  C:\Users\ainol\workspaces\final_work\rtos_IRQ_bsp\ps7_cortexa9_0\include/queue.h \
- C:\Users\ainol\workspaces\final_work\rtos_IRQ_bsp\ps7_cortexa9_0\include/task.h \
- C:\Users\ainol\workspaces\final_work\rtos_IRQ_bsp\ps7_cortexa9_0\include/timers.h \
- C:\Users\ainol\workspaces\final_work\rtos_IRQ_bsp\ps7_cortexa9_0\include/xtime_l.h
+ C:\Users\ainol\workspaces\final_work\rtos_IRQ_bsp\ps7_cortexa9_0\include/task.h
 
 C:\Users\ainol\workspaces\final_work\rtos_IRQ_bsp\ps7_cortexa9_0\include/xparameters.h:
 
@@ -112,7 +110,3 @@ C:\Users\ainol\workspaces\final_work\rtos_IRQ_bsp\ps7_cortexa9_0\include/semphr.
 C:\Users\ainol\workspaces\final_work\rtos_IRQ_bsp\ps7_cortexa9_0\include/queue.h:
 
 C:\Users\ainol\workspaces\final_work\rtos_IRQ_bsp\ps7_cortexa9_0\include/task.h:
-
-C:\Users\ainol\workspaces\final_work\rtos_IRQ_bsp\ps7_cortexa9_0\include/timers.h:
-
-C:\Users\ainol\workspaces\final_work\rtos_IRQ_bsp\ps7_cortexa9_0\include/xtime_l.h:
