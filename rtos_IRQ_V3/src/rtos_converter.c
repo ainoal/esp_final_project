@@ -9,6 +9,7 @@
 #include "pi_controller.h"
 #include "converter_model.h"
 #include "user_actions.h"
+#include "LED_PWM.h"
 #include <stdio.h>
 
 extern XScuGic xInterruptController;
@@ -30,6 +31,7 @@ int main(void)
 	SetupTimer();
 	//SetupTicker();
 	//SetupPushButtons();
+	initialize_PWM();
 	init_uart_semaphore();
 	init_button_semaphore();
 
@@ -86,12 +88,13 @@ void simulate_and_control() {
 	TickType_t wakeTime = xTaskGetTickCount();  // only once initialized
 
 	for( ;; ) {
-		AXI_LED_DATA ^= 0x01;
-		meas=converter_meas();
+		AXI_LED_DATA ^= 0x01; //blink the first led to show the simulation is running
+		meas=converter_meas();	//acquire measurement data
+		set_PWM_percentage(meas.y/10); //saturation 5 results in 50% PWM
 		//change_duty_cycle(meas);
 		//set_PWM_duty_cycle(meas.y);  TO BE IMPLEMENTED
-		u=pi_controller_update_state(meas.y);
-		converter_state_trans(u);
+		u=pi_controller_update_state(meas.y); //compute control (this function is nonreentrant, because it integrates the error)
+		converter_state_trans(u);	//simulate
 		vTaskDelayUntil( &wakeTime, freq );
 	}
 }

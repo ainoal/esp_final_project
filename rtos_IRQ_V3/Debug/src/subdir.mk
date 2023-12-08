@@ -7,6 +7,7 @@ LD_SRCS += \
 ../src/lscript.ld 
 
 C_SRCS += \
+../src/LED_PWM.c \
 ../src/btn_setup.c \
 ../src/converter_model.c \
 ../src/pi_controller.c \
@@ -18,6 +19,7 @@ C_SRCS += \
 ../src/user_actions.c 
 
 OBJS += \
+./src/LED_PWM.o \
 ./src/btn_setup.o \
 ./src/converter_model.o \
 ./src/pi_controller.o \
@@ -29,6 +31,7 @@ OBJS += \
 ./src/user_actions.o 
 
 C_DEPS += \
+./src/LED_PWM.d \
 ./src/btn_setup.d \
 ./src/converter_model.d \
 ./src/pi_controller.d \

@@ -59,7 +59,7 @@ void PushButtons_Handler(void *data)
 					last_debounce_time = current_time;
 					button_pressed = 1;
 					change_state();
-					//printf("STATE CHANGE\n");
+					printf("STATE CHANGE\n");
 				}
 
 				break;
