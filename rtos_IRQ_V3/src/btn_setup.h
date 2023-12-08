@@ -15,6 +15,7 @@
 
 //extern SemaphoreHandle_t button_semaphore;
 
+//void init_button_semaphore(void)
 void SetupPushButtons();
 void PushButtons_Handler();
 int checkUARTSemaphoreStatus(void);

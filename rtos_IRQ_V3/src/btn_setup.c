@@ -5,6 +5,10 @@
 #include "timers.h"
 #include <xtime_l.h>
 
+// Use debounce delay to handle possible fluctuations in the signal
+// when pressing a button, so that a single button press is not taken as 2
+#define DEBOUNCE_DELAY 1000
+
 SemaphoreHandle_t button_semaphore;
 TimerHandle_t semaphore_timer;
 
@@ -14,6 +18,7 @@ u8 buttons = 0;
 XTime last_debounce_time = 0;
 XTime current_time;
 int button_pressed = 0;
+
 
 void vTimerCallback(TimerHandle_t semaphore_timer) {
     xSemaphoreGive(button_semaphore); 	// Give the semaphore when timer runs out
@@ -48,12 +53,25 @@ void PushButtons_Handler(void *data)
 			case 0x01:
 				take_button_semaphore();
 				AXI_LED_DATA ^= 0x01;
-				change_state();
+				XTime_GetTime(&current_time);
+				if (!button_pressed && (current_time - last_debounce_time) >= DEBOUNCE_DELAY) {
+					// TODO: state change with the LEDs
+					last_debounce_time = current_time;
+					button_pressed = 1;
+					change_state();
+					//printf("STATE CHANGE\n");
+				}
+
 				break;
 			case 0x02:
 				take_button_semaphore();
 				AXI_LED_DATA ^= 0x02;
-				change_par_to_conf();
+				XTime_GetTime(&current_time);
+				if (!button_pressed && (current_time - last_debounce_time) >= DEBOUNCE_DELAY) {
+					last_debounce_time = current_time;
+					button_pressed = 1;
+					change_par_to_conf();
+				}
 				break;
 			case 0x04:
 				take_button_semaphore();
