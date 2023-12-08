@@ -726,3 +726,143 @@ con
 11:36:49 INFO  : Connected to target on host '127.0.0.1' and port '3121'.
 11:36:50 INFO  : 'targets -set -filter {jtag_cable_name =~ "Digilent Zybo Z7 210351A78123A" && level==0} -index 1' command is executed.
 11:36:51 INFO  : FPGA configured successfully with bitstream "C:/Users/ainol/workspaces/final_work/zybo_platform/system_wrapper.bit"
+11:37:57 INFO  : 'targets -set -filter {jtag_cable_name =~ "Digilent Zybo Z7 210351A78123A" && level==0} -index 1' command is executed.
+11:37:57 INFO  : 'fpga -state' command is executed.
+11:37:57 INFO  : Connected to target on host '127.0.0.1' and port '3121'.
+11:37:57 INFO  : Jtag cable 'Digilent Zybo Z7 210351A78123A' is selected.
+11:37:57 INFO  : 'jtag frequency' command is executed.
+11:37:57 INFO  : Sourcing of 'C:/Users/ainol/workspaces/final_work/zybo_platform/ps7_init.tcl' is done.
+11:37:57 INFO  : Context for 'APU' is selected.
+11:37:57 INFO  : Hardware design information is loaded from 'C:/Users/ainol/workspaces/final_work/zybo_platform/system.hdf'.
+11:37:57 INFO  : 'configparams force-mem-access 1' command is executed.
+11:37:57 INFO  : Context for 'APU' is selected.
+11:37:57 INFO  : 'stop' command is executed.
+11:37:57 INFO  : 'ps7_init' command is executed.
+11:37:57 INFO  : 'ps7_post_config' command is executed.
+11:37:57 INFO  : Context for processor 'ps7_cortexa9_0' is selected.
+11:37:57 INFO  : Processor reset is completed for 'ps7_cortexa9_0'.
+11:37:57 INFO  : Context for processor 'ps7_cortexa9_0' is selected.
+11:37:58 INFO  : The application 'C:/Users/ainol/workspaces/final_work/rtos_IRQ_V3/Debug/rtos_IRQ_V3.elf' is downloaded to processor 'ps7_cortexa9_0'.
+11:37:58 INFO  : 'configparams force-mem-access 0' command is executed.
+11:37:58 INFO  : ----------------XSDB Script----------------
+connect -url tcp:127.0.0.1:3121
+source C:/Users/ainol/workspaces/final_work/zybo_platform/ps7_init.tcl
+targets -set -nocase -filter {name =~"APU*" && jtag_cable_name =~ "Digilent Zybo Z7 210351A78123A"} -index 0
+loadhw -hw C:/Users/ainol/workspaces/final_work/zybo_platform/system.hdf -mem-ranges [list {0x40000000 0xbfffffff}]
+configparams force-mem-access 1
+targets -set -nocase -filter {name =~"APU*" && jtag_cable_name =~ "Digilent Zybo Z7 210351A78123A"} -index 0
+stop
+ps7_init
+ps7_post_config
+targets -set -nocase -filter {name =~ "ARM*#0" && jtag_cable_name =~ "Digilent Zybo Z7 210351A78123A"} -index 0
+rst -processor
+targets -set -nocase -filter {name =~ "ARM*#0" && jtag_cable_name =~ "Digilent Zybo Z7 210351A78123A"} -index 0
+dow C:/Users/ainol/workspaces/final_work/rtos_IRQ_V3/Debug/rtos_IRQ_V3.elf
+configparams force-mem-access 0
+----------------End of Script----------------
+
+11:37:58 INFO  : Memory regions updated for context APU
+11:37:58 INFO  : Context for processor 'ps7_cortexa9_0' is selected.
+11:37:58 INFO  : 'con' command is executed.
+11:37:58 INFO  : ----------------XSDB Script (After Launch)----------------
+targets -set -nocase -filter {name =~ "ARM*#0" && jtag_cable_name =~ "Digilent Zybo Z7 210351A78123A"} -index 0
+con
+----------------End of Script----------------
+
+11:37:58 INFO  : Launch script is exported to file 'C:\Users\ainol\workspaces\final_work\.sdk\launch_scripts\xilinx_c-c++_application_(system_debugger)\system_debugger_using_debug_rtos_irq_v3.elf_on_local.tcl'
+11:40:01 INFO  : Disconnected from the channel tcfchan#1.
+11:40:13 INFO  : Connected to target on host '127.0.0.1' and port '3121'.
+11:40:13 INFO  : 'targets -set -filter {jtag_cable_name =~ "Digilent Zybo Z7 210351A78123A" && level==0} -index 1' command is executed.
+11:40:13 INFO  : 'fpga -state' command is executed.
+11:40:13 INFO  : 'targets -set -filter {jtag_cable_name =~ "Digilent Zybo Z7 210351A78123A" && level==0} -index 1' command is executed.
+11:40:14 INFO  : FPGA configured successfully with bitstream "C:/Users/ainol/workspaces/final_work/zybo_platform/system_wrapper.bit"
+11:40:15 INFO  : Memory regions updated for context APU
+11:40:21 INFO  : 'targets -set -filter {jtag_cable_name =~ "Digilent Zybo Z7 210351A78123A" && level==0} -index 1' command is executed.
+11:40:21 INFO  : 'fpga -state' command is executed.
+11:40:21 INFO  : Connected to target on host '127.0.0.1' and port '3121'.
+11:40:22 INFO  : Jtag cable 'Digilent Zybo Z7 210351A78123A' is selected.
+11:40:22 INFO  : 'jtag frequency' command is executed.
+11:40:22 INFO  : Sourcing of 'C:/Users/ainol/workspaces/final_work/zybo_platform/ps7_init.tcl' is done.
+11:40:22 INFO  : Context for 'APU' is selected.
+11:40:22 INFO  : Hardware design information is loaded from 'C:/Users/ainol/workspaces/final_work/zybo_platform/system.hdf'.
+11:40:22 INFO  : 'configparams force-mem-access 1' command is executed.
+11:40:22 INFO  : Context for 'APU' is selected.
+11:40:22 INFO  : 'stop' command is executed.
+11:40:22 INFO  : 'ps7_init' command is executed.
+11:40:22 INFO  : 'ps7_post_config' command is executed.
+11:40:22 INFO  : Context for processor 'ps7_cortexa9_0' is selected.
+11:40:22 INFO  : Processor reset is completed for 'ps7_cortexa9_0'.
+11:40:22 INFO  : Context for processor 'ps7_cortexa9_0' is selected.
+11:40:23 INFO  : The application 'C:/Users/ainol/workspaces/final_work/rtos_IRQ_V3/Debug/rtos_IRQ_V3.elf' is downloaded to processor 'ps7_cortexa9_0'.
+11:40:23 INFO  : 'configparams force-mem-access 0' command is executed.
+11:40:23 INFO  : ----------------XSDB Script----------------
+connect -url tcp:127.0.0.1:3121
+source C:/Users/ainol/workspaces/final_work/zybo_platform/ps7_init.tcl
+targets -set -nocase -filter {name =~"APU*" && jtag_cable_name =~ "Digilent Zybo Z7 210351A78123A"} -index 0
+loadhw -hw C:/Users/ainol/workspaces/final_work/zybo_platform/system.hdf -mem-ranges [list {0x40000000 0xbfffffff}]
+configparams force-mem-access 1
+targets -set -nocase -filter {name =~"APU*" && jtag_cable_name =~ "Digilent Zybo Z7 210351A78123A"} -index 0
+stop
+ps7_init
+ps7_post_config
+targets -set -nocase -filter {name =~ "ARM*#0" && jtag_cable_name =~ "Digilent Zybo Z7 210351A78123A"} -index 0
+rst -processor
+targets -set -nocase -filter {name =~ "ARM*#0" && jtag_cable_name =~ "Digilent Zybo Z7 210351A78123A"} -index 0
+dow C:/Users/ainol/workspaces/final_work/rtos_IRQ_V3/Debug/rtos_IRQ_V3.elf
+configparams force-mem-access 0
+----------------End of Script----------------
+
+11:40:23 INFO  : Memory regions updated for context APU
+11:40:23 INFO  : Context for processor 'ps7_cortexa9_0' is selected.
+11:40:23 INFO  : 'con' command is executed.
+11:40:23 INFO  : ----------------XSDB Script (After Launch)----------------
+targets -set -nocase -filter {name =~ "ARM*#0" && jtag_cable_name =~ "Digilent Zybo Z7 210351A78123A"} -index 0
+con
+----------------End of Script----------------
+
+11:40:23 INFO  : Launch script is exported to file 'C:\Users\ainol\workspaces\final_work\.sdk\launch_scripts\xilinx_c-c++_application_(system_debugger)\system_debugger_using_debug_rtos_irq_v3.elf_on_local.tcl'
+11:40:34 INFO  : Disconnected from the channel tcfchan#2.
+11:40:35 INFO  : 'targets -set -filter {jtag_cable_name =~ "Digilent Zybo Z7 210351A78123A" && level==0} -index 1' command is executed.
+11:40:35 INFO  : 'fpga -state' command is executed.
+11:40:35 INFO  : Connected to target on host '127.0.0.1' and port '3121'.
+11:40:35 INFO  : Jtag cable 'Digilent Zybo Z7 210351A78123A' is selected.
+11:40:35 INFO  : 'jtag frequency' command is executed.
+11:40:35 INFO  : Sourcing of 'C:/Users/ainol/workspaces/final_work/zybo_platform/ps7_init.tcl' is done.
+11:40:35 INFO  : Context for 'APU' is selected.
+11:40:40 INFO  : Hardware design information is loaded from 'C:/Users/ainol/workspaces/final_work/zybo_platform/system.hdf'.
+11:40:40 INFO  : 'configparams force-mem-access 1' command is executed.
+11:40:40 INFO  : Context for 'APU' is selected.
+11:40:40 INFO  : 'stop' command is executed.
+11:40:41 INFO  : 'ps7_init' command is executed.
+11:40:41 INFO  : 'ps7_post_config' command is executed.
+11:40:41 INFO  : Context for processor 'ps7_cortexa9_0' is selected.
+11:40:41 INFO  : Processor reset is completed for 'ps7_cortexa9_0'.
+11:40:41 INFO  : Context for processor 'ps7_cortexa9_0' is selected.
+11:40:41 INFO  : The application 'C:/Users/ainol/workspaces/final_work/rtos_IRQ_V3/Debug/rtos_IRQ_V3.elf' is downloaded to processor 'ps7_cortexa9_0'.
+11:40:41 INFO  : 'configparams force-mem-access 0' command is executed.
+11:40:41 INFO  : ----------------XSDB Script----------------
+connect -url tcp:127.0.0.1:3121
+source C:/Users/ainol/workspaces/final_work/zybo_platform/ps7_init.tcl
+targets -set -nocase -filter {name =~"APU*" && jtag_cable_name =~ "Digilent Zybo Z7 210351A78123A"} -index 0
+loadhw -hw C:/Users/ainol/workspaces/final_work/zybo_platform/system.hdf -mem-ranges [list {0x40000000 0xbfffffff}]
+configparams force-mem-access 1
+targets -set -nocase -filter {name =~"APU*" && jtag_cable_name =~ "Digilent Zybo Z7 210351A78123A"} -index 0
+stop
+ps7_init
+ps7_post_config
+targets -set -nocase -filter {name =~ "ARM*#0" && jtag_cable_name =~ "Digilent Zybo Z7 210351A78123A"} -index 0
+rst -processor
+targets -set -nocase -filter {name =~ "ARM*#0" && jtag_cable_name =~ "Digilent Zybo Z7 210351A78123A"} -index 0
+dow C:/Users/ainol/workspaces/final_work/rtos_IRQ_V3/Debug/rtos_IRQ_V3.elf
+configparams force-mem-access 0
+----------------End of Script----------------
+
+11:40:41 INFO  : Memory regions updated for context APU
+11:40:41 INFO  : Context for processor 'ps7_cortexa9_0' is selected.
+11:40:42 INFO  : 'con' command is executed.
+11:40:42 INFO  : ----------------XSDB Script (After Launch)----------------
+targets -set -nocase -filter {name =~ "ARM*#0" && jtag_cable_name =~ "Digilent Zybo Z7 210351A78123A"} -index 0
+con
+----------------End of Script----------------
+
+11:40:42 INFO  : Launch script is exported to file 'C:\Users\ainol\workspaces\final_work\.sdk\launch_scripts\xilinx_c-c++_application_(system_debugger)\system_debugger_using_debug_rtos_irq_v3.elf_on_local.tcl'
