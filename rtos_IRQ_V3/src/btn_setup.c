@@ -31,19 +31,16 @@ void init_semaphore_timer(void) {
         xTimerStart(semaphore_timer, 0);
         printf("Timer started.\n");
     } else {
-    	printf("Timer could not be started.\n");
+    	printf("Error: Timer could not be started.\n");
     }
 }
 
 void PushButtons_Handler(void *data)
-//BUTTON SEMAPHORE ACQUIRED
 {
 	int isUARTSemaphoreTaken = checkUARTSemaphoreStatus();
-	//print_sth();
 	if (isUARTSemaphoreTaken == 0) {
 		/* Buttons have an effect only if the semaphore is free */
 		buttons = AXI_BTN_DATA;
-		//printf("Push buttons\n");
 		switch(buttons)
 			{
 			case 0x00:
@@ -94,8 +91,6 @@ void PushButtons_Handler(void *data)
 	else {
 		//printf("UART is in conf state\n");
 	}
-
-	//XGpio_InterruptClear(&BTNS_SWTS,0xF);
 }
 
 int take_button_semaphore() {
@@ -107,7 +102,6 @@ int take_button_semaphore() {
 			/* The semaphore was successfully obtained so the shared
 			 * resource can be accessed safely. */
 			printf("Button semaphore taken\n");
-			//print_sth();
 			init_semaphore_timer();
 		}
 		else {
@@ -122,7 +116,7 @@ int checkUARTSemaphoreStatus(void) {
 	int isUARTSemaphoreTaken = 0;
     if (xSemaphoreTake(uart_semaphore, 0) == pdTRUE) {
         xSemaphoreGive(uart_semaphore); // Release the semaphore immediately
-        isUARTSemaphoreTaken = 0; 	// Semaphore is available
+        isUARTSemaphoreTaken = 0; 		// Semaphore is available
     } else {
         isUARTSemaphoreTaken = 1; 		// Semaphore is taken
     }

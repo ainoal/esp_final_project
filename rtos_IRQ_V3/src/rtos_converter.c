@@ -30,23 +30,23 @@ int main(void)
 	//SetupUARTInterrupt();
 	SetupTimer();
 	//SetupTicker();
-	//SetupPushButtons();
 	initialize_PWM();
 	init_uart_semaphore();
 	init_button_semaphore();
 
+	//Initialize converter with nicely working parameters
 	double Kp_init=0.0024;
 	double Ki_init=242.1475;
 	converter_init(0.0,0.0,0.0,0.0,0.0,0.0);
 	pi_controller_init(Kp_init,Ki_init);
 
-
+	//Define tasks for the scheduler
 	xTaskCreate(simulate_and_control, "simulate_and_control", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY+3, NULL);
 	xTaskCreate(output_to_user, "output_to_user", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY+1, NULL);
 	xTaskCreate(read_UART,"read_UART",configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY+2, NULL);
 	xTaskCreate(buttons_task, "buttons_task", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY+4, NULL);
 
-	vTaskStartScheduler();
+	vTaskStartScheduler();	//start scheduling
 
 	/* As normal, the following line should never be reached. */
 	for (;;);
@@ -81,10 +81,11 @@ void buttons_task() {
 
 }
 
+//This function computes the new control, u, and runs the converter one time step further
 void simulate_and_control() {
 	const TickType_t freq = pdMS_TO_TICKS( 20 ); // in ms
 	double u;
-	struct time_stamp_meas meas;
+	struct time_stamp_meas meas; //time labeled measurement data y
 	TickType_t wakeTime = xTaskGetTickCount();  // only once initialized
 
 	for( ;; ) {
@@ -109,10 +110,10 @@ void output_to_user() {
 
 	for( ;; ) {
 		AXI_LED_DATA ^= 0x02;
-		meas=converter_meas();
-		u=pi_controller_get_state();
+		meas=converter_meas(); //this function is reentrant
+		u=pi_controller_get_state(); //this function is reentrant
 		printf("%.5f%s%.2f%s%.2f\n",
-			meas.time, del, u, del, meas.y);
+			meas.time, del, u, del, meas.y); //del is a predefined delimiter for the data
 		// https://www.freertos.org/vtaskdelayuntil.html
 		vTaskDelayUntil( &wakeTime, freq );
 
@@ -120,28 +121,27 @@ void output_to_user() {
 }
 
 
-
 void read_UART(){
 	//
 	const TickType_t freq = pdMS_TO_TICKS( 100 ); // in ms
 	TickType_t wakeTime = xTaskGetTickCount();  // only once initialized
 	//const char *message[20];
-	const char* message;
-	ParsedData user_data;
+	const char* message; //initialize pointer to the message string
+	ParsedData user_data; //initialize struct containing the message data
 	for( ;; ) {
 	//char* test=uart_receive();
 	//while(test){
 	//	printf("%c\n",test);
 	//	test=uart_receive();
 	//}
-	message=receive_message();
-	if (message){
+	message=receive_message();	//poll UART
+	if (message){	//if message is not empty
 		printf("%s\n",message);
-		user_data=command_parser(message);
+		user_data=command_parser(message); //convert the message (string) to a struct containing command (and possibly value)
 		//printf("%s\n",user_data.identifier);
 		//printf("%.2f\n",user_data.value);
 
-		take_user_actions(user_data); //TO BE IMPLEMENTED
+		take_user_actions(user_data); //based on the user UART input, TRY to take the corresponding actions (if allowed in current state)
 
 
 
