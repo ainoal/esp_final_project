@@ -24,6 +24,7 @@ int main(void)
 {
 	AXI_LED_TRI &= ~(0b1111UL);
 	AXI_BTN_TRI |= 0xF;
+	AXI_LED_DATA = 0b0001;
 
 	SetupInterrupts();
 	SetupUART();
@@ -74,7 +75,7 @@ void buttons_task() {
 	TickType_t wakeTime = xTaskGetTickCount();  // only once initialized
 
 	for( ;; ) {
-		AXI_LED_DATA ^= 0b1000;
+		//AXI_LED_DATA ^= 0b1000;
 		PushButtons_Handler();
 		vTaskDelayUntil( &wakeTime, freq );
 	}
@@ -89,7 +90,7 @@ void simulate_and_control() {
 	TickType_t wakeTime = xTaskGetTickCount();  // only once initialized
 
 	for( ;; ) {
-		AXI_LED_DATA ^= 0x01; //blink the first led to show the simulation is running
+		//AXI_LED_DATA ^= 0x01; //blink the first led to show the simulation is running
 		meas=converter_meas();	//acquire measurement data
 		set_PWM_percentage(meas.y/10); //saturation 5 results in 50% PWM
 		//change_duty_cycle(meas);
@@ -109,7 +110,7 @@ void output_to_user() {
 	double u;
 
 	for( ;; ) {
-		AXI_LED_DATA ^= 0x02;
+		//AXI_LED_DATA ^= 0x02;
 		meas=converter_meas(); //this function is reentrant
 		u=pi_controller_get_state(); //this function is reentrant
 		printf("%.5f%s%.2f%s%.2f\n",

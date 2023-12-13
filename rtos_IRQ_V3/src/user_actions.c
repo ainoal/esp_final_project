@@ -54,21 +54,19 @@ void take_user_actions(ParsedData command){
 	if (isButtonSemaphoreTaken == 0) {
 		switch(numeric_command){
 		case 1:
-			//ACQUIRE SEMAPHORE
+			//Take semaphore
 			if (uart_semaphore != NULL) {
-				/* See if the semaphore can be obtained. If the semaphore
-				 * is not available wait 10 ticks to see if it becomes free. */
+				// See if the semaphore can be obtained. If the semaphore
+				// is not available wait 10 ticks to see if it becomes free.
 
 				if (xSemaphoreTake(uart_semaphore, 10) == pdTRUE) {
-					/* The semaphore was successfully obtained so the shared
-					 * resource can be accessed safely. */
-					request_state(CONFIGURATION);//request state change to conf
+					// The semaphore was successfully obtained
+					request_state(CONFIGURATION); //request state change to conf
 					printf("UART semaphore taken\n");
 				}
 				else {
-					/* The semaphore could not be obtained even after waiting 10 ticks, so
-					 the shared resource cannot be accessed. */
-					// TODO: IMPLEMENT EXCEPTION HANDLING
+					// The semaphore could not be obtained even after waiting 10 ticks
+					printf("Error: UART semaphore could not be obtained\n");
 				}
 			}
 
