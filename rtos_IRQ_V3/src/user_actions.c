@@ -63,6 +63,7 @@ void take_user_actions(ParsedData command){
 					// The semaphore was successfully obtained
 					request_state(CONFIGURATION); //request state change to conf
 					printf("UART semaphore taken\n");
+					printf("Entered to configuration mode.\n You can change values of Kp, Ki, or uref by writing command Kp/Ki/uref=value,\n or exit the mode by writing command idle/mod\n");
 				}
 				else {
 					// The semaphore could not be obtained even after waiting 10 ticks
@@ -76,6 +77,7 @@ void take_user_actions(ParsedData command){
 			//RELEASE SEMAPHORE
 			xSemaphoreGive(uart_semaphore);
 			printf("UART semaphore given\n");
+			printf("Entered to idle mode.\n You can change values of uref by writing command uref=value,\n or exit the mode by writing command conf/mod\n");
 			request_state(IDLING);//request state change to idle
 		break;
 
@@ -83,11 +85,13 @@ void take_user_actions(ParsedData command){
 			//RELEASE SEMAPHORE
 			xSemaphoreGive(uart_semaphore);
 			printf("UART semaphore given\n");
+			printf("Entered to modulation mode.\n You can change values of uref by writing command uref=value,\n or exit the mode by writing command conf/idle\n");
 			request_state(MODULATING);//request state change to modulation
 		break;
 
 		case 4:
 			pi_controller_update_setpoint(command.value);
+			printf("Set point updated to %.2f\n",command.value);
 		break;
 
 		case 5:
@@ -95,7 +99,8 @@ void take_user_actions(ParsedData command){
 				printf("This action allowed only in configuration state\n");
 			}
 			else{
-				printf("Kp changed\n");
+				pi_controller_set_Kp(command.value);
+				printf("Kp changed to %.4f\n",command.value);
 			}
 		break;
 
@@ -104,7 +109,8 @@ void take_user_actions(ParsedData command){
 				printf("This action allowed only in configuration state\n");
 			}
 			else{
-				printf("Ki changed\n");
+				pi_controller_set_Ki(command.value);
+				printf("Ki changed to %.2f\n",command.value);
 			}
 		break;
 

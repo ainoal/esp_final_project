@@ -7,12 +7,10 @@
 
 #include "state_machine.h"
 #include "btn_setup.h"
-#define CONFIGURATION 0
-#define IDLING 1
-#define MODULATING 2
+
 
 //PRIVATE VARIABLES
-static int state=0;
+static int state=IDLING;
 
 // PUBLIC FUNCTIONS
 void request_state(int new_state){

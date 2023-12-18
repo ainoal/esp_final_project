@@ -56,6 +56,7 @@ void initialize_PWM(){
 
 
 void set_PWM_percentage(float perc){
+	perc=(perc<1.0)*(perc>-1.0)*perc+(perc>1.0)-(perc<-1.0);
 	float float_match=perc*65535;
 	int match_value = (int)float_match;
 	if(perc>0){

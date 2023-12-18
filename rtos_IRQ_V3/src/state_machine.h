@@ -10,6 +10,9 @@
 
 #include "pi_controller.h"
 
+#define CONFIGURATION 0
+#define IDLING 1
+#define MODULATING 2
 
 void request_state(int new_state);
 int get_state();

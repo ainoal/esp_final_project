@@ -14,7 +14,7 @@
 void init_semaphore_timer(void);
 void PushButtons_Handler();
 int checkUARTSemaphoreStatus(void);
-int take_button_semaphore(void);
+void take_button_semaphore(void);
 
 
 #endif /* SRC_BTN_SETUP_H_ */

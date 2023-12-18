@@ -8,6 +8,9 @@
 #ifndef PI_CONTROLLER_H
 #define PI_CONTROLLER_H
 
+#define conf_kp 0
+#define conf_ki 1
+
 #include "pi_controller_gen.h"
 
 // Public function to initialize the PI controller
@@ -15,11 +18,10 @@ void pi_controller_init(double kp, double ki);
 
 // Public functions to update the PI controller
 void pi_controller_update_setpoint(double setpoint);
-//void pi_controller_increment_Kp(double kp_change);
-//void pi_controller_increment_Ki(double ki_change);
-void change_par_to_conf();
-void change_setpoint(double delta);
-void change_par_value(double delta);
+int get_par_to_conf();
+int change_par_to_conf();
+double change_setpoint(double delta);
+double change_par_value(double delta);
 
 
 void pi_controller_set_Kp(double new_kp);

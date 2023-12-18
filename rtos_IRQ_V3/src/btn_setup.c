@@ -3,6 +3,8 @@
 #include "btn_setup.h"
 #include "timers.h"
 #include <xtime_l.h>
+#include "state_machine.h"
+#include <stdio.h>
 
 // Use debounce delay to handle possible fluctuations in the signal
 // when pressing a button, so that a single button press is not taken as 2
@@ -40,6 +42,7 @@ void PushButtons_Handler(void *data)
 	if (isUARTSemaphoreTaken == 0) {
 		// Buttons have an effect only if the semaphore is free
 		buttons = AXI_BTN_DATA;
+		int state;
 		switch(buttons)
 			{
 			case 0x00:
@@ -55,7 +58,21 @@ void PushButtons_Handler(void *data)
 					last_debounce_time = current_time;
 					button_pressed = 1;
 					change_state();
-					printf("STATE CHANGE\n");
+					state=get_state();
+					switch(state){
+					case CONFIGURATION:
+						if (get_par_to_conf()==conf_kp){
+							printf("Entered to configuration mode.\n You can decrease or increase the value of Kp/Ki with buttons 2 and 3, respectively,\n change the configurable parameter with button 1 (currently Kp) or enter idle mode with button 0\n");}
+						else{
+							printf("Entered to configuration mode.\n You can decrease or increase the value of Kp/Ki with buttons 2 and 3, respectively,\n change the configurable parameter with button 1 (currently Ki) or enter idle mode with button 0\n");}
+					break;
+					case IDLING:
+						printf("Entered to idle mode.\n You can enter modulation mode with button 0\n");
+					break;
+					case MODULATING:
+						printf("Entered to modulation mode.\n You can decrease or increase the value of uref with buttons 2 and 3, respectively,\nor enter configuration mode with button 0\n");
+					break;
+					}
 				}
 
 				break;
@@ -67,24 +84,48 @@ void PushButtons_Handler(void *data)
 				if (!button_pressed && (current_time - last_debounce_time) >= DEBOUNCE_DELAY) {
 					last_debounce_time = current_time;
 					button_pressed = 1;
-					change_par_to_conf();
+					int par_to_conf=change_par_to_conf();
+					if (par_to_conf==conf_kp){
+						printf("Configurable parameter changed to Kp\n");
+					}else{printf("Configurable parameter changed to Ki\n");}
 				}
 				break;
 			case 0x04:
 				take_button_semaphore();
 				//AXI_LED_DATA ^= 0x04;
-				if (get_state()!=0){
-					change_setpoint(-0.1);}
-				else{
-					change_par_value(-1);}
+				if (get_state()==MODULATING){
+					double setpoint_val=change_setpoint(-0.1);
+					//printf("New set point = %.2f\n", setpoint_val);
+				}
+				else if(get_state()==CONFIGURATION){
+					double par_value;
+					if (get_par_to_conf()==conf_kp){
+						par_value=change_par_value(-0.0001);
+						printf("Kp changed to %.4f\n", par_value);
+					}else{
+						par_value=change_par_value(-1.0);
+						printf("Ki changed to %.2f\n", par_value);
+					}
+				}
+
 				break;
 			case 0x08:
 				take_button_semaphore();
 				//AXI_LED_DATA ^= 0x08;
-				if (get_state()!=0){
-					change_setpoint(0.1);}
-				else{
-					change_par_value(1);}
+				if (get_state()==MODULATING){
+					double setpoint_val=change_setpoint(0.1);
+					//printf("New set point = %.2f\n", setpoint_val);
+				}
+				else if(get_state()==CONFIGURATION){
+					double par_value;
+					if (get_par_to_conf()==conf_kp){
+						par_value=change_par_value(0.0001);
+						printf("Kp changed to %.4f\n", par_value);
+					}else{
+						par_value=change_par_value(1.0);
+						printf("Ki changed to %.2f\n", par_value);
+					}
+				}
 				break;
 			}
 	}
@@ -92,7 +133,7 @@ void PushButtons_Handler(void *data)
 	}
 }
 
-int take_button_semaphore() {
+void take_button_semaphore() {
 	if (button_semaphore != NULL) {
 		// See if the semaphore can be obtained. If the semaphore
 		// is not available wait 10 ticks to see if it becomes free.

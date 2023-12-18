@@ -3,8 +3,8 @@
 #include "FreeRTOS.h"
 #include "task.h"
 
-#include "timer_setup.h"
 #include "uart_setup.h"
+#include "state_machine.h"
 #include "btn_setup.h"
 #include "pi_controller.h"
 #include "converter_model.h"
@@ -24,12 +24,12 @@ int main(void)
 {
 	AXI_LED_TRI &= ~(0b1111UL);
 	AXI_BTN_TRI |= 0xF;
-	AXI_LED_DATA = 0b0001;
+	AXI_LED_DATA = 0b0010;
 
 	SetupInterrupts();
 	SetupUART();
 	//SetupUARTInterrupt();
-	SetupTimer();
+	//SetupTimer();
 	//SetupTicker();
 	initialize_PWM();
 	init_uart_semaphore();
@@ -40,7 +40,9 @@ int main(void)
 	double Ki_init=242.1475;
 	converter_init(0.0,0.0,0.0,0.0,0.0,0.0);
 	pi_controller_init(Kp_init,Ki_init);
-
+	printf("Program started in idling mode.\n"
+								"You can exit the mode by writing command conf/mod\n"
+			"You can change the mode by pressing button 0\n");
 	//Define tasks for the scheduler
 	xTaskCreate(simulate_and_control, "simulate_and_control", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY+3, NULL);
 	xTaskCreate(output_to_user, "output_to_user", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY+1, NULL);
@@ -90,11 +92,8 @@ void simulate_and_control() {
 	TickType_t wakeTime = xTaskGetTickCount();  // only once initialized
 
 	for( ;; ) {
-		//AXI_LED_DATA ^= 0x01; //blink the first led to show the simulation is running
 		meas=converter_meas();	//acquire measurement data
 		set_PWM_percentage(meas.y/10); //saturation 5 results in 50% PWM
-		//change_duty_cycle(meas);
-		//set_PWM_duty_cycle(meas.y);  TO BE IMPLEMENTED
 		u=pi_controller_update_state(meas.y); //compute control (this function is nonreentrant, because it integrates the error)
 		converter_state_trans(u);	//simulate
 		vTaskDelayUntil( &wakeTime, freq );
@@ -108,13 +107,17 @@ void output_to_user() {
 	TickType_t wakeTime = xTaskGetTickCount();  // only once initialized
 	struct time_stamp_meas meas;
 	double u;
+	int state;
 
 	for( ;; ) {
 		//AXI_LED_DATA ^= 0x02;
 		meas=converter_meas(); //this function is reentrant
 		u=pi_controller_get_state(); //this function is reentrant
-		printf("%.5f%s%.2f%s%.2f\n",
-			meas.time, del, u, del, meas.y); //del is a predefined delimiter for the data
+		state=get_state();
+		if (state==MODULATING){
+			printf("t=%.5f%s uin=%.2f%s uout=%.2f\n",
+				meas.time, del, u, del, meas.y); //del is a predefined delimiter for the data
+		}
 		// https://www.freertos.org/vtaskdelayuntil.html
 		vTaskDelayUntil( &wakeTime, freq );
 
@@ -126,40 +129,14 @@ void read_UART(){
 	//
 	const TickType_t freq = pdMS_TO_TICKS( 100 ); // in ms
 	TickType_t wakeTime = xTaskGetTickCount();  // only once initialized
-	//const char *message[20];
 	const char* message; //initialize pointer to the message string
 	ParsedData user_data; //initialize struct containing the message data
 	for( ;; ) {
-	//char* test=uart_receive();
-	//while(test){
-	//	printf("%c\n",test);
-	//	test=uart_receive();
-	//}
 	message=receive_message();	//poll UART
 	if (message){	//if message is not empty
 		printf("%s\n",message);
 		user_data=command_parser(message); //convert the message (string) to a struct containing command (and possibly value)
-		//printf("%s\n",user_data.identifier);
-		//printf("%.2f\n",user_data.value);
-
 		take_user_actions(user_data); //based on the user UART input, TRY to take the corresponding actions (if allowed in current state)
-
-
-
-		///////////////////////////////////////////////////////////////////
-		/*if(strcmp(user_data.identifier,"uref")==0){
-			pi_controller_update_setpoint(user_data.value);
-			//AXI_LED_DATA ^= 0x4;
-		}
-		else if(strcmp(user_data.identifier,"run_command")==0){
-			if(user_data.value==1){
-				start_controller();
-			}
-			else if(user_data.value==0){
-				stop_controller();
-			}
-		}*/
-		/////////////////////////////////////////////////////////////////////
 	}
 	vTaskDelayUntil( &wakeTime, freq );
 	}
