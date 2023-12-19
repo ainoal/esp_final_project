@@ -10,7 +10,6 @@
 # define BUFFER_SIZE 20
 static char rx_buf[BUFFER_SIZE];
 
-//static int message_ready = 0;
 
 void SetupUART(){
         uint32_t r = 0; // Temporary value variable

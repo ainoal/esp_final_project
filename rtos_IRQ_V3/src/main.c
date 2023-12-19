@@ -28,9 +28,6 @@ int main(void)
 
 	SetupInterrupts();
 	SetupUART();
-	//SetupUARTInterrupt();
-	//SetupTimer();
-	//SetupTicker();
 	initialize_PWM();
 	init_uart_semaphore();
 	init_button_semaphore();
@@ -77,7 +74,6 @@ void buttons_task() {
 	TickType_t wakeTime = xTaskGetTickCount();  // only once initialized
 
 	for( ;; ) {
-		//AXI_LED_DATA ^= 0b1000;
 		PushButtons_Handler();
 		vTaskDelayUntil( &wakeTime, freq );
 	}
@@ -110,7 +106,6 @@ void output_to_user() {
 	int state;
 
 	for( ;; ) {
-		//AXI_LED_DATA ^= 0x02;
 		meas=converter_meas(); //this function is reentrant
 		u=pi_controller_get_state(); //this function is reentrant
 		state=get_state();

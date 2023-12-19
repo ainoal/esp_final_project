@@ -8,7 +8,8 @@
 
 // Use debounce delay to handle possible fluctuations in the signal
 // when pressing a button, so that a single button press is not taken as 2
-#define DEBOUNCE_DELAY 1000
+#define DEBOUNCE_DELAY 1000 //in nano seconds
+#define INCREMENT_DELAY 200000000 //in nano seconds
 
 SemaphoreHandle_t button_semaphore;
 TimerHandle_t semaphore_timer;
@@ -30,7 +31,7 @@ void init_semaphore_timer(void) {
 	semaphore_timer = xTimerCreate("SemaphoreTimer", pdMS_TO_TICKS(5000), pdFALSE, (void *)0, vTimerCallback);
 	if (semaphore_timer != NULL) {
         xTimerStart(semaphore_timer, 0);
-        printf("Timer started.\n");
+        //printf("Timer started.\n");
     } else {
     	printf("Error: Timer could not be started.\n");
     }
@@ -51,9 +52,8 @@ void PushButtons_Handler(void *data)
 				break;
 			case 0x01:
 				take_button_semaphore();
-				//AXI_LED_DATA ^= 0x01;
 				XTime_GetTime(&current_time);
-				// Handle long button presses
+				// Single button press taken only once
 				if (!button_pressed && (current_time - last_debounce_time) >= DEBOUNCE_DELAY) {
 					last_debounce_time = current_time;
 					button_pressed = 1;
@@ -78,9 +78,8 @@ void PushButtons_Handler(void *data)
 				break;
 			case 0x02:
 				take_button_semaphore();
-				//AXI_LED_DATA ^= 0x02;
 				XTime_GetTime(&current_time);
-				// Handle long button presses
+				// Single button press taken only once
 				if (!button_pressed && (current_time - last_debounce_time) >= DEBOUNCE_DELAY) {
 					last_debounce_time = current_time;
 					button_pressed = 1;
@@ -92,38 +91,47 @@ void PushButtons_Handler(void *data)
 				break;
 			case 0x04:
 				take_button_semaphore();
-				//AXI_LED_DATA ^= 0x04;
-				if (get_state()==MODULATING){
-					double setpoint_val=change_setpoint(-0.1);
-					//printf("New set point = %.2f\n", setpoint_val);
-				}
-				else if(get_state()==CONFIGURATION){
-					double par_value;
-					if (get_par_to_conf()==conf_kp){
-						par_value=change_par_value(-0.0001);
-						printf("Kp changed to %.4f\n", par_value);
-					}else{
-						par_value=change_par_value(-1.0);
-						printf("Ki changed to %.2f\n", par_value);
+				XTime_GetTime(&current_time);
+				if ((current_time - last_debounce_time) >= INCREMENT_DELAY || //if button is pressed long enough
+						(!button_pressed && (current_time - last_debounce_time) >= DEBOUNCE_DELAY)) { //Detect rising edge of button press
+						last_debounce_time = current_time;
+						button_pressed = 1;
+					if (get_state()==MODULATING){
+						double setpoint_val=change_setpoint(-0.1);
+						printf("New set point = %.2f\n", setpoint_val);
+					}
+					else if(get_state()==CONFIGURATION){
+						double par_value;
+						if (get_par_to_conf()==conf_kp){
+							par_value=change_par_value(-0.0001);
+							printf("Kp changed to %.4f\n", par_value);
+						}else{
+							par_value=change_par_value(-1.0);
+							printf("Ki changed to %.2f\n", par_value);
+						}
 					}
 				}
-
 				break;
 			case 0x08:
 				take_button_semaphore();
-				//AXI_LED_DATA ^= 0x08;
-				if (get_state()==MODULATING){
-					double setpoint_val=change_setpoint(0.1);
-					//printf("New set point = %.2f\n", setpoint_val);
-				}
-				else if(get_state()==CONFIGURATION){
-					double par_value;
-					if (get_par_to_conf()==conf_kp){
-						par_value=change_par_value(0.0001);
-						printf("Kp changed to %.4f\n", par_value);
-					}else{
-						par_value=change_par_value(1.0);
-						printf("Ki changed to %.2f\n", par_value);
+				XTime_GetTime(&current_time);
+				if ((current_time - last_debounce_time) >= INCREMENT_DELAY || //if button is pressed long enough
+						(!button_pressed && (current_time - last_debounce_time) >= DEBOUNCE_DELAY)) { //Detect rising edge of button press
+						last_debounce_time = current_time;
+						button_pressed = 1;
+					if (get_state()==MODULATING){
+						double setpoint_val=change_setpoint(0.1);
+						printf("New set point = %.2f\n", setpoint_val);
+					}
+					else if(get_state()==CONFIGURATION){
+						double par_value;
+						if (get_par_to_conf()==conf_kp){
+							par_value=change_par_value(0.0001);
+							printf("Kp changed to %.4f\n", par_value);
+						}else{
+							par_value=change_par_value(1.0);
+							printf("Ki changed to %.2f\n", par_value);
+						}
 					}
 				}
 				break;

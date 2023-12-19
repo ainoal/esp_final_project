@@ -38,7 +38,6 @@ static double B[N][M] = { //Control matrix (discrete time)
 	{0.0539},
 };
 
-//static double C[P][N] = {{0, 0, 0, 0, 0, 1}};
 
 // PRIVATE FUNCTIONS
 static void state_trans(double u) { //compute A*x

@@ -82,7 +82,6 @@ void take_user_actions(ParsedData command){
 		break;
 
 		case 3:
-			//RELEASE SEMAPHORE
 			xSemaphoreGive(uart_semaphore);
 			printf("UART semaphore given\n");
 			printf("Entered to modulation mode.\n You can change values of uref by writing command uref=value,\n or exit the mode by writing command conf/idle\n");
@@ -90,8 +89,13 @@ void take_user_actions(ParsedData command){
 		break;
 
 		case 4:
-			pi_controller_update_setpoint(command.value);
-			printf("Set point updated to %.2f\n",command.value);
+			if (get_state()==IDLING){
+				printf("This action not allowed in idle mode.\n");
+			}
+			else{
+				pi_controller_update_setpoint(command.value);
+				printf("Set point updated to %.2f\n",command.value);
+			}
 		break;
 
 		case 5:

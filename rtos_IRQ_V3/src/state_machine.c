@@ -18,14 +18,12 @@ void request_state(int new_state){
 	case CONFIGURATION:
 		stop_controller(); //first stop the controller
 		state=CONFIGURATION; //then change state to configuration (this ensures no inverter parameter changes can occur when the converter is on)
-		//set LEDS ON?
 		AXI_LED_DATA = 0b0001;
 	break;
 
 	case IDLING:
 		stop_controller();
 		state=IDLING; // no modulation, but configuring inverter parameters not allowed
-		//set LEDS OFF?
 		AXI_LED_DATA = 0b0010;
 	break;
 

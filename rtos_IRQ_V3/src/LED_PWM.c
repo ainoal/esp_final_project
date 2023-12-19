@@ -56,17 +56,14 @@ void initialize_PWM(){
 
 
 void set_PWM_percentage(float perc){
-	perc=(perc<1.0)*(perc>-1.0)*perc+(perc>1.0)-(perc<-1.0);
+	perc=(perc<1.0)*(perc>-1.0)*perc+(perc>1.0)-(perc<-1.0); //saturate to +-1
 	float float_match=perc*65535;
 	int match_value = (int)float_match;
-	if(perc>0){
+	if(perc>0){ //red led
 		TTC0_MATCH_0=match_value;
 		TTC0_MATCH_1_COUNTER_2 = 0;
-		//volatile u32* ptr_register=NULL;
-		//ptr_register = &TTC0_MATCH_0;
-		//*ptr_register = match_value;
 		}
-	else{
+	else{ //green led
 		TTC0_MATCH_0=0;
 		TTC0_MATCH_1_COUNTER_2 = -match_value;
 	}

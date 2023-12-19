@@ -17,8 +17,6 @@ typedef struct {
 } ParsedData;
 
 void SetupUART();
-//void SetupUARTInterrupt();
-//void UartIRQHandler();
 char uart_receive();
 const char* receive_message();
 ParsedData command_parser(const char* uart_message);
